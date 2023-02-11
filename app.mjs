@@ -18,6 +18,7 @@ globalThis.app = new PIXI.Application({
 app.renderer.events.cursorStyles.crosshair="url('cross.png') 31 31 ,crosshair"
 app.stage.interactive = true;
 app.stage.hitArea = app.screen;
+let bullets = app.stage.bullets=[]
 
 // let sprite = PIXI.Sprite.from('sample.png')
 // app.stage.addChild(sprite);
@@ -40,4 +41,10 @@ app.ticker.add((delta) => {
 //   sprite.x = 100.0 + Math.cos(elapsed/50.0) * 100.0;
     // me.x=120 + Math.cos(elapsed/50.0) * 100.0;
     me.update(elapsed)
+
+    for(let i=0; i<bullets.length;){
+        if(bullets[i].update(elapsed) ){
+            bullets.splice(i,1)
+        }else{++i}
+    }
 });

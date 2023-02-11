@@ -44,7 +44,7 @@ export default class player extends PIXI.Container{
 
   addRhand(){
     let rhand = this.rhand = new PIXI.Graphics()
-    console.log(rhand)
+    // console.log(rhand)
     rhand.x=30
     rhand.y=24
     this.addChild(rhand)
@@ -81,8 +81,9 @@ export default class player extends PIXI.Container{
 
     for(let i=0;i<3;++i){
       if(!this.isShooting[i] || elapsed - this.lastShot[i] < this.fireRate[i]) continue
-      let bullet=new Bullet({x:x,y:y,r:r})
+      let bullet=new Bullet({ x:x, y:y, r:r, startFrame:elapsed})
       this.parent.addChildAt(bullet,0)
+      this.parent.bullets.push(bullet)
       this.lastShot[i]=elapsed
     }
   }
