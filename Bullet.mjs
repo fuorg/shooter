@@ -9,8 +9,8 @@ export class Bullet extends PIXI.Graphics{
     this.type=type
 
     if(type=='makarov'){
-      this.beginFill('#888')
-      this.drawRect(0,-1,4,2)
+      this.beginFill(0x888888)
+      this.drawRect(0,-4,12,8)
       this.endFill()
     }
   }

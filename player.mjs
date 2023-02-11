@@ -50,8 +50,8 @@ export default class player extends PIXI.Container{
     this.addChild(rhand)
     rhand.beginFill(this.color)
     rhand.drawCircle(0,1,7)
-    rhand.beginFill('#fff')
-    rhand.drawRect(0,-3,14,6)
+    rhand.beginFill(0x0)
+    rhand.drawRect(0,-4,20,8)
     rhand.endFill()
   }
 
@@ -81,8 +81,9 @@ export default class player extends PIXI.Container{
 
     for(let i=0;i<3;++i){
       if(!this.isShooting[i] || elapsed - this.lastShot[i] < this.fireRate[i]) continue
-      let bullet=new Bullet({x:x,y:y})
-      this.parent.addChild(bullet)
+      let bullet=new Bullet({x:x,y:y,r:r})
+      this.parent.addChildAt(bullet,0)
+      this.lastShot[i]=elapsed
     }
   }
 }
