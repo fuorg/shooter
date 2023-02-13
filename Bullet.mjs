@@ -15,7 +15,7 @@ export class Bullet extends PIXI.Graphics{
       this.beginFill(0x888888)
       this.drawRect(0,-4,12,8)
       this.endFill()
-      this.endFrame=startFrame+50
+      this.endFrame=startFrame+60
       this.velocity=15
       // this.matrix.translate(1,0)
     }

@@ -2,15 +2,19 @@ import * as PIXI from "./pixi.mjs"
 import {kbdControl} from './Control.mjs'
 import {Bullet} from './Bullet.mjs'
 
+const PLAYER=0
+const BOT=0
+
 export default class player extends PIXI.Container{
-  constructor({color=0x438753,x=100,y=100,type='player'}={}){
+  constructor({color=0x438753,x=100,y=100,r=0,type=PLAYER}={}){
     super()
     this.x=x
     this.y=y
-    this.angle=0
+    this.rotation=r
     this.color=color
+    this.type=type
     this.maxSpeed=6
-    this.crosshair={x:0,y:0}
+    this.crosshair={x:x+200,y:y}
     this.isShooting=[false,false,false]
     this.lastShot=[0,0,0]
     this.fireRate=[10,60,30]
@@ -69,6 +73,13 @@ export default class player extends PIXI.Container{
 
     ////////////// circle.position.copyFrom(e.global);
 
+    switch(this.type){
+      case PLAYER: this.updatePlayer(elapsed);break
+
+    }
+  }
+
+  updatePlayer(elapsed){
     // rotate body
     let r=Math.atan(((this.crosshair.y-this.y)||.001)/(this.crosshair.x-this.x)) + (this.x>this.crosshair.x?Math.PI:0)
     this.rotation=r
