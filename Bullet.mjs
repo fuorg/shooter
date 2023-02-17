@@ -17,7 +17,10 @@ export class Bullet extends PIXI.Graphics{
       this.endFill()
       this.endFrame=startFrame+60
       this.velocity=15
+      this.damage=100
       // this.matrix.translate(1,0)
+      this.transform.position.x+=Math.cos(this.rotation)*6
+      this.transform.position.y+=Math.sin(this.rotation)*6
     }
   }
 

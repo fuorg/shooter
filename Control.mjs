@@ -1,20 +1,43 @@
 export default class Control{
-  constructor(){
+  constructor(owner){
+    this.owner=owner
     this.x=0
     this.y=0
+    this.d=1
     this.r=0
+    this.isShooting=[false,false,false]
+  }
+  destroy(){
+    this.owner=undefined
+  }
+}
+
+export class stcControl extends Control{
+  constructor(owner){
+    super(owner)
+
+  }
+}
+
+export class rndControl extends Control{
+  constructor(owner){
+    super(owner)
+    this.x=Math.random()*2-1
+    this.y=Math.random()*2-1
+    this.d=Math.random()
+    this.r=Math.random()*2-1
   }
 }
 
 export class kbdControl extends Control{
   constructor(me){
-    super()
+    super(me)
     this.keyHandler=this.key.bind(this)
     globalThis.addEventListener('keydown',this.keyHandler)
     globalThis.addEventListener('keyup',this.keyHandler)
 
     let stage=me.parent
-    stage.cursor='crosshair'
+    stage.cursor='crossg'
 
     // Follow the pointer
     stage.addEventListener('pointermove', (e) => {
@@ -23,7 +46,8 @@ export class kbdControl extends Control{
 
     let clickity=(e)=>{
       // console.log(e.type)
-      me.shoot(e.type == 'mousedown' , e.button)
+      // me.shoot(e.type == 'mousedown' , e.button)
+      this.isShooting[e.button]=e.type == 'mousedown'
     }
     // stage.addEventListener('pointerdown',clickity)
     // stage.addEventListener('pointerup',clickity)

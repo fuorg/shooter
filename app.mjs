@@ -15,18 +15,17 @@ globalThis.app = new PIXI.Application({
 });
 // document.body.appendChild(app.view)
 
-app.renderer.events.cursorStyles.crosshair="url('cross.png') 31 31 ,crosshair"
+app.renderer.events.cursorStyles.crossw="url('cross-white.png') 24 24 ,crosshair"
+app.renderer.events.cursorStyles.crossg="url('cross-grey.png') 24 24 ,crosshair"
 app.stage.interactive = true;
 app.stage.hitArea = app.screen;
 let bullets = app.stage.bullets=[]
+let bots = app.stage.bots=[]
+let rootBoundary=app.renderer.events.rootBoundary
 
 // let sprite = PIXI.Sprite.from('sample.png')
 // app.stage.addChild(sprite);
 
-let me = new player();
-me.canvas=canvas
-app.stage.addChild(me);
-me.setControl('kbd')
 
 
 // Add a variable to count up the seconds our demo has been running
@@ -40,11 +39,45 @@ app.ticker.add((delta) => {
   // by 50 to slow the animation down a bit...
 //   sprite.x = 100.0 + Math.cos(elapsed/50.0) * 100.0;
     // me.x=120 + Math.cos(elapsed/50.0) * 100.0;
-    me.update(elapsed)
 
     for(let i=0; i<bullets.length;){
         if(bullets[i].update(elapsed) ){
             bullets.splice(i,1)
+            continue
+        }
+        
+        let target=rootBoundary.hitTest(bullets[i].x,bullets[i].y)
+        if(target && target.takeDamage){
+            // console.log(target)
+            target.takeDamage(bullets[i].damage)
+            bullets[i].destroy()
+            bullets.splice(i,1)
+            continue
+        }
+        ++i
+    }
+    for(let i=0; i<bots.length;){
+        if(bots[i].update(elapsed) ){
+            bots.splice(i,1)
         }else{++i}
     }
 });
+
+
+app.addme=function(){
+    let me = new player({world:this});
+    me.canvas=this.view
+    this.stage.bots.push(me)
+    this.stage.addChild(me);
+    me.setControl('kbd')
+}
+
+app.addbot=function(type){
+    let bot=new player({type:type,color:0xaa2244,x:300,y:300,world:app})
+    this.stage.bots.push(bot)
+    this.stage.addChild(bot);
+
+    console.log(bots)
+}
+
+app.addme()

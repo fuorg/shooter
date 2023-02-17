@@ -7,15 +7,28 @@ body{
 	margin: 0;
 	height: 100vh;
 	overflow: hidden;
+	display: flex;
 }
 canvas#canvas{
 	width: 80%;
 	height: 100%;
 }
+a{
+	color: bisque;
+	cursor: pointer;
+}
+a:hover{
+	text-decoration: underline;
+}
 </style>
 </head>
 <body>
 	<canvas id="canvas"></canvas>
+	<div style="padding: 10px;">
+		<a onclick="app.addme()">add me</a><br/>
+		<a onclick="app.addbot('rnd')">add random</a><br/>
+		<a onclick="app.addbot('stc')">add static</a>
+	</div>
 	<script type="module" src="app.mjs"></script>
 </body>
 </html>
