@@ -73,11 +73,25 @@ app.addme=function(){
 }
 
 app.addbot=function(type){
-    let bot=new player({type:type,color:0xaa2244,x:300,y:300,world:app})
+    let bot=new player({type:type,color:0xaa2244,world:app})
     this.stage.bots.push(bot)
     this.stage.addChild(bot);
 
     console.log(bots)
 }
 
-app.addme()
+// app.addme()
+app.keyHandler=key.bind(app)
+globalThis.addEventListener('keyup',app.keyHandler)
+
+function key(e){
+    // let k
+    // if(e.type == 'keydown'){  k=1
+    // }else{                    k=-1}
+    if(!e.repeat){
+      if(e.code=='Digit1'){this.addme()}
+      if(e.code=='Digit2'){this.addbot('rnd')}
+      if(e.code=='Digit3'){this.addbot('stc')}
+    }
+    // console.log(e)
+}

@@ -15,7 +15,6 @@ export default class Control{
 export class stcControl extends Control{
   constructor(owner){
     super(owner)
-
   }
 }
 
@@ -40,19 +39,24 @@ export class kbdControl extends Control{
     stage.cursor='crossg'
 
     // Follow the pointer
-    stage.addEventListener('pointermove', (e) => {
-        me.crosshair=e.global
-    });
+    this.pointerHandler=(e) => me.crosshair=e.global
+    stage.addEventListener('pointermove', this.pointerHandler);
 
-    let clickity=(e)=>{
-      // console.log(e.type)
-      // me.shoot(e.type == 'mousedown' , e.button)
+    this.clickity=(e)=>{
       this.isShooting[e.button]=e.type == 'mousedown'
+      e.preventDefault()
     }
-    // stage.addEventListener('pointerdown',clickity)
-    // stage.addEventListener('pointerup',clickity)
-    me.canvas.addEventListener('mousedown',clickity)
-    me.canvas.addEventListener('mouseup',clickity)
+    me.canvas.addEventListener('mousedown',this.clickity)
+    me.canvas.addEventListener('mouseup',this.clickity)
+  }
+
+  destroy(){
+    globalThis.removeEventListener('keydown',this.keyHandler)
+    globalThis.removeEventListener('keyup',this.keyHandler)
+    this.owner.parent.removeEventListener('pointermove', this.pointerHandler);
+    this.owner.canvas.removeEventListener('mousedown',this.clickity)
+    this.owner.canvas.removeEventListener('mouseup',this.clickity)
+    super.destroy()
   }
 
   key(e){

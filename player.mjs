@@ -11,11 +11,11 @@ const pTypes={
 }
 
 export default class player extends PIXI.Container{
-  constructor({color=0x438753,x=100,y=100,r=0,type='player',world}={}){
+  constructor({color=0x438753,x,y,r=0,type='player',world}={}){
     super()
     this.world=world
-    this.x=x
-    this.y=y
+    this.x=x??world.screen.width/2
+    this.y=y??world.screen.height/2
     this.rotation=r
     this.color=color
     this.type=pTypes[type]
