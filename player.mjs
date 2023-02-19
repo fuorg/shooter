@@ -10,8 +10,10 @@ const pTypes={
   stc   :11,
 }
 
-export default class player extends PIXI.Container{
-
+export default class Player extends PIXI.Container{
+  static sound={
+    puff: new Audio('sound/puff.ogg')
+  }
   constructor({color=0x438753,x,y,r=0,type='player',world}={}){
     super()
     this.world=world
@@ -111,9 +113,11 @@ export default class player extends PIXI.Container{
   //   this.isShooting[which]=isShooting
   // }
 
-  takeDamage(amount){
+  takeDamage(bullet){
     // health update
-    this.hp-=amount
+    Bullet.sound.hit[bullet.type].currentTime=0
+    Bullet.sound.hit[bullet.type].play()
+    this.hp-=bullet.damage
     if(this.hp<0) this.hp=0
     this.hb.scale.x=1-this.hp/this.maxhp
   }
@@ -142,6 +146,8 @@ export default class player extends PIXI.Container{
 
   update(elapsed){
     if(this.hp<=0){   // die
+      Player.sound.puff.currentTime=0
+      Player.sound.puff.play()
       this.destroy()
       return true
     }

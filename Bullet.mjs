@@ -5,6 +5,9 @@ export class Bullet extends PIXI.Graphics{
     shot: {
       makarov: new Audio('./sound/shot.ogg'),
     },
+    hit:{
+      makarov: new Audio('./sound/hit.ogg'),
+    },
   }
   static cost={
     makarov: 100,

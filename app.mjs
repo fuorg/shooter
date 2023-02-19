@@ -1,5 +1,5 @@
 import * as PIXI from "./pixi.mjs"
-import player from "./player.mjs";
+import Player from "./player.mjs";
 
 let canvas=document.querySelector('canvas#canvas')
 canvas.oncontextmenu=e=>e.preventDefault()
@@ -49,7 +49,7 @@ app.ticker.add((delta) => {
         let target=rootBoundary.hitTest(bullets[i].x,bullets[i].y)
         if(target && target.takeDamage){
             // console.log(target)
-            target.takeDamage(bullets[i].damage)
+            target.takeDamage(bullets[i])
             bullets[i].destroy()
             bullets.splice(i,1)
             continue
@@ -72,7 +72,7 @@ app.addme=function(n=1){
           , y0=this.screen.height/2
           , x=x0+r*Math.cos(angle)
           , y=y0+r*Math.sin(angle)
-        let me = new player({x,y,world:this});
+        let me = new Player({x,y,world:this});
         me.canvas=this.view
         this.stage.bots.push(me)
         this.stage.addChild(me);
@@ -81,7 +81,7 @@ app.addme=function(n=1){
 }
 
 app.addbot=function(type){
-    let bot=new player({type:type,color:0xaa2244,world:app})
+    let bot=new Player({type:type,color:0xaa2244,world:app})
     this.stage.bots.push(bot)
     this.stage.addChild(bot);
 
