@@ -11,6 +11,7 @@ const pTypes={
 }
 
 export default class player extends PIXI.Container{
+
   constructor({color=0x438753,x,y,r=0,type='player',world}={}){
     super()
     this.world=world
@@ -22,13 +23,13 @@ export default class player extends PIXI.Container{
     this.maxSpeed=6
     this.maxrSpeed=0.1
     this.hp=this.maxhp=1000
-    this.mana=this.baseMana=1000
-    this.minMana=250
+    this.mana=this.maxMana=1000
     this.sensorResolution=this.nextSensorUpdate=30  // in frames
     this.lastShot=[0,0,0]
-    this.fireRate=[10,60,30]
+    this.fireRate=[5,60,30]
     this.wepPos=[null,null,null]
-
+    this.wepType=['makarov',null,null]
+    
     this.sensors=new Sensors(this)
 
     this.interactive=true
@@ -62,17 +63,21 @@ export default class player extends PIXI.Container{
 
   addTorso(){
     let torso = this.torso = new PIXI.Graphics()
-    this.addChild(torso)
     torso.beginFill(this.color) // body
     torso.drawCircle(0,0,30)
-    // torso.endFill()
-    torso.beginFill(0xffffff)   // eyes
-    torso.drawCircle(10, 10,5)
-    torso.drawCircle(10,-10,5)
-    torso.beginFill(0x0)        // pupils
-    torso.drawCircle(13, 10,2)
-    torso.drawCircle(13,-10,2)
     torso.endFill()
+    this.addChild(torso)
+
+    let eyes = this.eyes = new PIXI.Graphics()
+    eyes.x=eyes.pivot.x=17
+    eyes.beginFill(0xffffff)   // eyes
+    eyes.drawCircle(10, 13,10)
+    eyes.drawCircle(10,-13,10)
+    eyes.beginFill(0x0)        // pupils
+    eyes.drawCircle(15, 13,4)
+    eyes.drawCircle(15,-13,4)
+    eyes.endFill()
+    this.addChild(eyes)
   }
 
   addHealthBar(){
@@ -80,7 +85,7 @@ export default class player extends PIXI.Container{
     this.addChild(hb)
     hb.lineStyle(1,0,1,0)      // health bar 
     hb.beginFill(0xff0000)
-    hb.drawRect(-30,-5,60,10)
+    hb.drawRect(-30,-3,60,6)
     hb.endFill()
     hb.scale.x=0
   }
@@ -118,15 +123,20 @@ export default class player extends PIXI.Container{
     for(let i=0;i<3;++i){
       if(!this.wepPos[i]) continue
       if(!this.control.isShooting[i] || elapsed - this.lastShot[i] < this.fireRate[i]) continue
+      this.lastShot[i]=elapsed  // to control the firerate even when not enough resource
 
-      let {x,y}=this.wepPos[i].toGlobal(this.parent.position)
-        , r=this.rotation + this.wepPos[i].rotation
+      if(Bullet.cost[this.wepType[i]]>this.mana){continue}
+
+      let {x,y}=this.wepPos[i].toGlobal(this.parent.position) // origin point of bullet
+        , r=this.rotation + this.wepPos[i].rotation           // rotation of bullet
 
       let bullet=new Bullet({ x:x, y:y, r:r, startFrame:elapsed})
-      this.mana-=100
+      // Bullet.sounds.shot.play()
+      this.mana-=bullet.damage
       this.parent.addChildAt(bullet,0)
       this.parent.bullets.push(bullet)
-      this.lastShot[i]=elapsed
+
+      this.eyes.scale.x=this.mana/this.maxMana
     };
   }
 

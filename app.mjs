@@ -15,8 +15,8 @@ globalThis.app = new PIXI.Application({
 });
 // document.body.appendChild(app.view)
 
-app.renderer.events.cursorStyles.crossw="url('cross-white.png') 24 24 ,crosshair"
-app.renderer.events.cursorStyles.crossg="url('cross-grey.png') 24 24 ,crosshair"
+app.renderer.events.cursorStyles.crossw="url('img/cross-white.png') 24 24 ,crosshair"
+app.renderer.events.cursorStyles.crossg="url('img/cross-grey.png') 24 24 ,crosshair"
 app.stage.interactive = true;
 app.stage.hitArea = app.screen;
 let bullets = app.stage.bullets=[]
@@ -64,12 +64,20 @@ app.ticker.add((delta) => {
 });
 
 
-app.addme=function(){
-    let me = new player({world:this});
-    me.canvas=this.view
-    this.stage.bots.push(me)
-    this.stage.addChild(me);
-    me.setControl('kbd')
+app.addme=function(n=1){
+    for(let i=0; i<n; ++i){
+        let angle=Math.PI*2/n*i
+          , r=n*80/(2*Math.PI)
+          , x0=this.screen.width/2
+          , y0=this.screen.height/2
+          , x=x0+r*Math.cos(angle)
+          , y=y0+r*Math.sin(angle)
+        let me = new player({x,y,world:this});
+        me.canvas=this.view
+        this.stage.bots.push(me)
+        this.stage.addChild(me);
+        me.setControl('kbd')
+    }
 }
 
 app.addbot=function(type){
@@ -80,7 +88,7 @@ app.addbot=function(type){
     console.log(bots)
 }
 
-// app.addme()
+app.addme()
 app.keyHandler=key.bind(app)
 globalThis.addEventListener('keyup',app.keyHandler)
 

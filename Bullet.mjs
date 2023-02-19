@@ -1,6 +1,14 @@
 import * as PIXI from "./pixi.mjs"
 
 export class Bullet extends PIXI.Graphics{
+  static sound={
+    shot: {
+      makarov: new Audio('./sound/shot.ogg'),
+    },
+  }
+  static cost={
+    makarov: 100,
+  }
   constructor({x=0,y=0,r=0,type='makarov', startFrame=0}={}){
     super()
     this.x=x
@@ -11,16 +19,20 @@ export class Bullet extends PIXI.Graphics{
     this.startFrame=startFrame
     // this.matrix=new PIXI.Matrix()
 
+    Bullet.sound.shot[type].currentTime=0
+    Bullet.sound.shot[type].play()
+
     if(type=='makarov'){
       this.beginFill(0x888888)
       this.drawRect(0,-4,12,8)
       this.endFill()
-      this.endFrame=startFrame+60
-      this.velocity=15
+      this.endFrame=startFrame+80
+      this.velocity=25
       this.damage=100
       // this.matrix.translate(1,0)
       this.transform.position.x+=Math.cos(this.rotation)*6
       this.transform.position.y+=Math.sin(this.rotation)*6
+
     }
   }
 
