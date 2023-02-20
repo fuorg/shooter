@@ -4,6 +4,7 @@
 <style>
 body{
 	background-color: #222;
+	color: lightgrey;
 	margin: 0;
 	height: 100vh;
 	overflow: hidden;
@@ -28,7 +29,8 @@ a:hover{
 		<a onclick="app.addme()">add me</a>
 		<a onclick="app.addme(30)">30</a><br/>
 		<a onclick="app.addbot('rnd')">add random</a><br/>
-		<a onclick="app.addbot('stc')">add static</a>
+		<a onclick="app.addbot('stc')">add static</a><br/>
+		<div id="debug" style="white-space: pre;"></div>
 	</div>
 	<script type="module" src="app.mjs"></script>
 </body>

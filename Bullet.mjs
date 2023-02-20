@@ -1,4 +1,4 @@
-import * as PIXI from "./pixi.mjs"
+import * as PIXI from "./lib/pixi.mjs"
 
 export class Bullet extends PIXI.Graphics{
   static sound={

@@ -1,5 +1,8 @@
-import * as PIXI from "./pixi.mjs"
-import Player from "./player.mjs";
+import * as PIXI from "./lib/pixi.mjs"
+import './lib/graphics-extras.js'
+import './lib/math-extras.js'
+import Player from "./Player.mjs";
+import {Drop} from "./Drop.mjs"
 
 let canvas=document.querySelector('canvas#canvas')
 canvas.oncontextmenu=e=>e.preventDefault()
@@ -20,7 +23,8 @@ app.renderer.events.cursorStyles.crossg="url('img/cross-grey.png') 24 24 ,crossh
 app.stage.interactive = true;
 app.stage.hitArea = app.screen;
 let bullets = app.stage.bullets=[]
-let bots = app.stage.bots=[]
+let bots    = app.stage.bots   =[]
+let drops   = app.stage.drops  =[]
 let rootBoundary=app.renderer.events.rootBoundary
 
 // let sprite = PIXI.Sprite.from('sample.png')
@@ -88,9 +92,19 @@ app.addbot=function(type){
     console.log(bots)
 }
 
+new Drop({world:app,value:1000})
 app.addme()
 app.keyHandler=key.bind(app)
 globalThis.addEventListener('keyup',app.keyHandler)
+app.debugDiv=document.querySelector('div#debug')
+setInterval(updateDebug.bind(app),500)
+
+// end
+
+function updateDebug(){
+    if(this.stage.bots.length==0) return
+    this.debugDiv.textContent=JSON.stringify(this.stage.bots[0].sensors.state,null,2)
+}
 
 function key(e){
     // let k

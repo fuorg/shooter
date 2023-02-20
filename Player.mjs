@@ -1,7 +1,8 @@
-import * as PIXI from "./pixi.mjs"
+import * as PIXI from "./lib/pixi.mjs"
 import {kbdControl,rndControl,stcControl} from './Control.mjs'
 import {Bullet}  from './Bullet.mjs'
 import {Sensors} from "./Sensors.mjs"
+import {Drop}    from "./Drop.mjs"
 
 const pTypes={
   player:0,
@@ -32,14 +33,14 @@ export default class Player extends PIXI.Container{
     this.wepPos=[null,null,null]
     this.wepType=['makarov',null,null]
     
-    this.sensors=new Sensors(this)
-
     this.interactive=true
     this.cursor='crossw'
 
     this.addTorso()
     this.addHealthBar()
     this.addRhand()
+    
+    this.sensors=new Sensors(this)
     if(type.match(/rnd|stc/)) this.setControl(type)
   }
 
@@ -148,6 +149,13 @@ export default class Player extends PIXI.Container{
     if(this.hp<=0){   // die
       Player.sound.puff.currentTime=0
       Player.sound.puff.play()
+      let drop=new Drop({
+        type  :'mana',
+        x     :this.x,
+        y     :this.y,
+        value :this.maxhp,
+        world :this.world,
+      });
       this.destroy()
       return true
     }
@@ -190,12 +198,13 @@ export default class Player extends PIXI.Container{
 
 
     // rotate body
-    let r=Math.atan(((this.crosshair.y-this.y)||.001)/(this.crosshair.x-this.x)) + (this.x>this.crosshair.x?Math.PI:0)
+    // let r=Math.atan(((this.crosshair.y-this.y)||.001)/(this.crosshair.x-this.x)) + (this.x>this.crosshair.x?Math.PI:0)
+    let r=Math.atan2(this.crosshair.y-this.y, this.crosshair.x-this.x)
     this.rotation=r
 
     // rotate right hand
     let {x,y}=this.rhand.toGlobal(this.parent.position)
-    r=Math.atan((this.crosshair.y-y)/(this.crosshair.x-x)) + (x>this.crosshair.x?Math.PI:0)
+    r=Math.atan2(this.crosshair.y-y , this.crosshair.x-x)
     this.rhand.rotation=-this.rotation+r
     // console.log(x,y)
 
